@@ -29,6 +29,6 @@ While we strive to maintain the scripts in this repository as error-free as poss
 Lab members are welcome to report bugs or suggest improvements. Please use the "issues" tool in GitHub (https://github.com/LabNPF/LabNPF_scripts/issues).
 
 
-## Contributers
+## Contributors
 *(in preparation)*
 
