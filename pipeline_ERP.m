@@ -1,12 +1,26 @@
+%% 00 - Global variables
+
+bin_def = "/A_BinDescriptorFile_AvCond.txt" %Name of the bin descriptor file. Default: "/A_BinDescriptorFile_AvCond.txt"
+epoch_startend = [-200.0  800.0]; %Start and end of the epochs. Default:[-200.0 800.0]
+%Sections 06 and 07 have bin and channel operators, respectively, that are study dependent so there's no default.
+fid = fopen('log.txt','a+'); %Creates or opens the log file
+fclose(fid);
+
 %% 01 - Create event list
+
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
 
 eeglab; %Open EEGLab
 
 directory_name = uigetdir; %Select directory of the files
-%cd(directory_name); %Change working directory
-ref_files = dir(fullfile(directory_name, '*_Ref.set'));
+cd(directory_name); %Change working directory
+EEG_directory_name = strcat(directory_name,'/EEG_Set');
+ref_files = dir(fullfile(EEG_directory_name, '*_Ref.set'));
 
-mkdir(directory_name, 'ERPLAB'); %Create new directory for ERPLab files
+mkdir(directory_name, '/ERP_Set'); %Create new directory for ERPLab files
+ERP_directory_name = strcat(directory_name,'/ERP_Set');
 
 ref_fileIndex = find(~[ref_files.isdir]);
 
@@ -14,27 +28,42 @@ for i = 1:length(ref_fileIndex) %Creates and saves the event list
     fileName = ref_files(ref_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    EEG = pop_loadset( 'filename', fileName, 'filepath', directory_name);
+    EEG = pop_loadset( 'filename', fileName, 'filepath', EEG_directory_name);
     EEG = eeg_checkset( EEG );
+    
+    old_EEG = EEG;
 
     EEG.setname=[NAME, '_elist'];
 
     EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' }, 'Eventlist', ...
-    [directory_name '\ERPLAB\' EEG.setname, '.txt'] );
+    [directory_name '\ERP_Set\' EEG.setname, '.txt'] );
 
     EEG = eeg_checkset(EEG);
     eeglab redraw;
 
-    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], [directory_name '\ERPLAB']);
+    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], [directory_name '\ERP_Set']);
+    
+    if isequaln(old_EEG,EEG)
+       error('Something went wrong...');
+    end
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; Created event list; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** All files successfully exported! ***');
 
 %% 02 - Assign Bins
 
-erp_directory_name = strcat(directory_name,'/ERPLAB');
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
 
-elist_files = dir(fullfile(erp_directory_name, '*_elist.set'));
+eeglab redraw;
+
+elist_files = dir(fullfile(ERP_directory_name, '*_elist.set'));
 
 elist_fileIndex = find(~[elist_files.isdir]);
 
@@ -42,25 +71,42 @@ for i = 1:length(elist_fileIndex) %Assigns Bins
     fileName = elist_files(elist_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    EEG = pop_loadset( 'filename', fileName, 'filepath', erp_directory_name);
+    EEG = pop_loadset( 'filename', fileName, 'filepath', ERP_directory_name);
     EEG = eeg_checkset( EEG );
+    
+    old_EEG = EEG;
 
     EEG.setname=[NAME, '_BIN'];
 
-    EEG  = pop_binlister( EEG , 'BDF', convertStringsToChars(erp_directory_name+"/A_BinDescriptorFile_AvCond.txt"), ...
-    'ExportEL', [erp_directory_name '\' EEG.setname, '.txt'] , 'IndexEL',  1, 'SendEL2', 'EEG&Text', 'Voutput', 'EEG' ); 
+    EEG  = pop_binlister( EEG , 'BDF', convertStringsToChars(directory_name+bin_def), ...
+    'ExportEL', [ERP_directory_name '\' EEG.setname, '.txt'] , 'IndexEL',  1, 'SendEL2', 'EEG&Text', 'Voutput', 'EEG' ); 
 
     EEG = eeg_checkset(EEG);
     eeglab redraw;
 
-    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], erp_directory_name);
+    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], ERP_directory_name);
+    
+    if isequaln(old_EEG,EEG)
+       error('Something went wrong...');
+    end
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; Assigned bins; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** Bins successfully assigned! ***');
 
 %% 03 - Extract Bin based epochs
 
-bin_files = dir(fullfile(erp_directory_name, '*_BIN.set'));
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab redraw;
+
+bin_files = dir(fullfile(ERP_directory_name, '*_BIN.set'));
 
 bin_fileIndex = find(~[bin_files.isdir]);
 
@@ -68,24 +114,41 @@ for i = 1:length(bin_fileIndex) %Extracts epochs
     fileName = bin_files(bin_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    EEG = pop_loadset( 'filename', fileName, 'filepath', erp_directory_name);
+    EEG = pop_loadset( 'filename', fileName, 'filepath', ERP_directory_name);
     EEG = eeg_checkset( EEG );
+    
+    old_EEG = EEG;
 
     EEG.setname=[NAME, '_epoched'];
 
-    EEG = pop_epochbin( EEG , [-200.0  800.0],  'pre');
+    EEG = pop_epochbin( EEG , epoch_startend,  'pre');
 
     EEG = eeg_checkset(EEG);
     eeglab redraw;
 
-    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], erp_directory_name);
+    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], ERP_directory_name);
+    
+    if isequaln(old_EEG,EEG)
+       error('Something went wrong...');
+    end
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; Extracted bin based epochs; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** Bin based epochs successfully extracted! ***');
 
 %% 04 - Update event list with marked epochs
 
-epoched_files = dir(fullfile(erp_directory_name, '*_epoched.set'));
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab redraw;
+
+epoched_files = dir(fullfile(ERP_directory_name, '*_epoched.set'));
 
 epoched_fileIndex = find(~[epoched_files.isdir]);
 
@@ -93,8 +156,10 @@ for i = 1:length(epoched_fileIndex) %Updates the event list with the marked epoc
     fileName = epoched_files(epoched_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    EEG = pop_loadset( 'filename', fileName, 'filepath', erp_directory_name);
+    EEG = pop_loadset( 'filename', fileName, 'filepath', ERP_directory_name);
     EEG = eeg_checkset( EEG );
+    
+    old_EEG = EEG;
 
     EEG.setname=[NAME, '_artef'];
 
@@ -102,14 +167,29 @@ for i = 1:length(epoched_fileIndex) %Updates the event list with the marked epoc
     EEG = eeg_checkset(EEG);
     eeglab redraw;
 
-    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], erp_directory_name);
+    EEGOUT = pop_saveset(EEG,  [EEG.setname, '.set'], ERP_directory_name);
+    
+    if isequaln(old_EEG,EEG)
+       error('Something went wrong...');
+    end
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; Updated event list with marked epochs; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** Event list successfully updated! ***');
 
 %% 05 - Create ERP set
 
-artef_files = dir(fullfile(erp_directory_name, '*_artef.set'));
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab redraw;
+
+artef_files = dir(fullfile(ERP_directory_name, '*_artef.set'));
 
 artef_fileIndex = find(~[artef_files.isdir]);
 
@@ -117,24 +197,35 @@ for i = 1:length(artef_fileIndex) %Creates ERP set
     fileName = artef_files(artef_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    EEG = pop_loadset( 'filename', fileName, 'filepath', erp_directory_name);
+    EEG = pop_loadset( 'filename', fileName, 'filepath', ERP_directory_name);
     EEG = eeg_checkset( EEG );
 
     ERPNAME=[NAME, '_ERP'];
 
     ERP = pop_averager( EEG , 'Criterion', 'good', 'ExcludeBoundary', 'on', 'SEM', 'on' );
-    ERP = pop_savemyerp(ERP, 'erpname', ERPNAME, 'filename', [ERPNAME, '.erp'], 'filepath', erp_directory_name, 'Warning',...
+    ERP = pop_savemyerp(ERP, 'erpname', ERPNAME, 'filename', [ERPNAME, '.erp'], 'filepath', ERP_directory_name, 'Warning',...
  'on');
 
     EEG = eeg_checkset(EEG);
     eeglab redraw;
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; Created ERP set; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** ERP set successfully created! ***');
 
 %% 06 - New Bins ERP set
 
-erp_files = dir(fullfile(erp_directory_name, '*_ERP.erp'));
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab redraw;
+
+erp_files = dir(fullfile(ERP_directory_name, '*_ERP.erp'));
 
 erp_fileIndex = find(~[erp_files.isdir]);
 
@@ -142,7 +233,9 @@ for i = 1:length(erp_fileIndex)
     fileName = erp_files(erp_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    ERP = pop_loaderp( 'filename', fileName, 'filepath',erp_directory_name);
+    ERP = pop_loaderp( 'filename', fileName, 'filepath',ERP_directory_name);
+    
+    old_ERP = ERP;
 
     ERPNEWNAME=[NAME, '_NewBin'];
 
@@ -150,17 +243,32 @@ for i = 1:length(erp_fileIndex)
   'nb4 = wavgbin(2,5) label AversiveB2',  'nb5 = wavgbin(3,6) label AversiveB3',  'nb6 = b7 label Non-AversiveB1',  'nb7 = b8 label Non-AversiveB2', ...
   'nb8 = b9 label Non-AversiveB3', 'nb9 = b10 label Ext_Aversive', 'nb10 = wavgbin(11,12) label Ext_NonAversive'});
 
-    ERP = pop_savemyerp(ERP, 'erpname', ERPNEWNAME, 'filename', [ERPNEWNAME, '.erp'], 'filepath', erp_directory_name, 'Warning',...
+    ERP = pop_savemyerp(ERP, 'erpname', ERPNEWNAME, 'filename', [ERPNEWNAME, '.erp'], 'filepath', ERP_directory_name, 'Warning',...
  'on');
 
     eeglab redraw;
+    
+    if isequaln(old_ERP,ERP)
+       error('Something went wrong...');
+    end
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; New bins; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** All files successfully processed! ***');
 
 %% 07 - New channels ERP set
 
-newbin_files = dir(fullfile(erp_directory_name, '*_NewBin.erp'));
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab redraw;
+
+newbin_files = dir(fullfile(ERP_directory_name, '*_NewBin.erp'));
 
 newbin_fileIndex = find(~[newbin_files.isdir]);
 
@@ -168,7 +276,9 @@ for i = 1:length(newbin_fileIndex)
     fileName = newbin_files(newbin_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    ERP = pop_loaderp( 'filename', fileName, 'filepath',erp_directory_name);
+    ERP = pop_loaderp( 'filename', fileName, 'filepath',ERP_directory_name);
+    
+    old_ERP = ERP;
 
     ERPNEWNAME=[NAME, '_AvgChan'];
 
@@ -177,17 +287,32 @@ for i = 1:length(newbin_fileIndex)
   'Ch135 = (ch87+ch93+ch103+ch104+ch105+ch110+ch111)/7 label AvgC4', 'Ch136 = (ch61+ch62+ch67+ch72+ch77+ch78)/6 label AvgPZ', 'Ch137 = (ch42+ch47+ch51+ch52+ch53+ch59+ch60)/7 label AvgP3',...
   'Ch138 = (ch85+ch86+ch91+ch92+ch93+ch97+ch98)/7 label AvgP4'}, 'ErrorMsg', 'popup', 'Warning', 'on');
 
-    ERP = pop_savemyerp(ERP, 'erpname', ERPNEWNAME, 'filename', [ERPNEWNAME, '.erp'], 'filepath', erp_directory_name, 'Warning',...
+    ERP = pop_savemyerp(ERP, 'erpname', ERPNEWNAME, 'filename', [ERPNEWNAME, '.erp'], 'filepath', ERP_directory_name, 'Warning',...
  'on');
 
     eeglab redraw;
+    
+    if isequaln(old_ERP,ERP)
+       error('Something went wrong...');
+    end
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; New channels; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** All files successfully processed! ***');
 
 %% 08 - Extract epoch number
 
-avgchan_files = dir(fullfile(erp_directory_name, '*_AvgChan.erp'));
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab redraw;
+
+avgchan_files = dir(fullfile(ERP_directory_name, '*_AvgChan.erp'));
 
 avgchan_fileIndex = find(~[avgchan_files.isdir]);
 
@@ -195,11 +320,16 @@ for i = 1:length(avgchan_fileIndex)
     fileName = avgchan_files(avgchan_fileIndex(i)).name;
     [PATH, NAME, EXT] = fileparts(fileName);
 
-    ERP = pop_loaderp( 'filename', fileName, 'filepath',erp_directory_name);
+    ERP = pop_loaderp( 'filename', fileName, 'filepath',ERP_directory_name);
 
-    NTRIALS(i,1:10)=ERP.ntrials.accepted;
+    NTRIALS(i,:)=ERP.ntrials.accepted;
 
     eeglab redraw;
+    
+    fid = fopen('log.txt','a+');
+    fprintf(fid, 'Subject: %d ; Extracted epoch number; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fclose(fid);
+    
 end
 
 disp('*** All files successfully processed! ***');
