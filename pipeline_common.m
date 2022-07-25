@@ -9,6 +9,14 @@ ref = []; %Reference channel. Default: [] (average of all channels)
 fid = fopen('log.txt','a+'); %Creates or opens the log 
 fclose(fid);
 
+directory_name = uigetdir; %Select directory of the files
+cd(directory_name); %Change working directory
+raw_directory_name = strcat(directory_name,'/RAW');
+raw_files = dir(fullfile(raw_directory_name, '*.raw'));
+
+mkdir(directory_name, '/EEG_Set'); %Create new directory to save .set files
+EEG_directory_name = strcat(directory_name,'/EEG_Set');
+
 %% 01 - Autoexport egi to .set
 
 if exist('channel_interp','var') == 0
@@ -16,13 +24,6 @@ if exist('channel_interp','var') == 0
 end
 
 eeglab; %Open EEGLab
-
-directory_name = uigetdir; %Select directory of the files
-cd(directory_name); %Change working directory
-raw_directory_name = strcat(directory_name,'/RAW');
-raw_files = dir(fullfile(raw_directory_name, '*.raw')); 
-
-mkdir(directory_name, '/EEG_Set'); %Create new directory to save .set files
 
 raw_fileIndex = find(~[raw_files.isdir]); %Creates index of files in directory
 
@@ -51,8 +52,6 @@ if exist('channel_interp','var') == 0
 end
 
 eeglab redraw;
-
-EEG_directory_name = strcat(directory_name,'/EEG_Set');
 
 set_files = dir(fullfile(EEG_directory_name, '*.set'));
 

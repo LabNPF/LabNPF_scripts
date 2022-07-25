@@ -6,14 +6,6 @@ epoch_startend = [-200.0  800.0]; %Start and end of the epochs. Default:[-200.0 
 fid = fopen('log.txt','a+'); %Creates or opens the log file
 fclose(fid);
 
-%% 01 - Create event list
-
-if exist('bin_def','var') == 0
-    error('Global variables undefined');
-end
-
-eeglab; %Open EEGLab
-
 directory_name = uigetdir; %Select directory of the files
 cd(directory_name); %Change working directory
 EEG_directory_name = strcat(directory_name,'/EEG_Set');
@@ -21,6 +13,14 @@ ref_files = dir(fullfile(EEG_directory_name, '*_Ref.set'));
 
 mkdir(directory_name, '/ERP_Set'); %Create new directory for ERPLab files
 ERP_directory_name = strcat(directory_name,'/ERP_Set');
+
+%% 01 - Create event list
+
+if exist('bin_def','var') == 0
+    error('Global variables undefined');
+end
+
+eeglab; %Open EEGLab
 
 ref_fileIndex = find(~[ref_files.isdir]);
 
