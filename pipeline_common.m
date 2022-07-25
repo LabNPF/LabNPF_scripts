@@ -19,7 +19,7 @@ eeglab; %Open EEGLab
 
 directory_name = uigetdir; %Select directory of the files
 cd(directory_name); %Change working directory
-raw_directory_name = strcat(directory_name,'/RAW')
+raw_directory_name = strcat(directory_name,'/RAW');
 raw_files = dir(fullfile(raw_directory_name, '*.raw')); 
 
 mkdir(directory_name, '/EEG_Set'); %Create new directory to save .set files
@@ -107,7 +107,7 @@ for i = 1:length(set_fileIndex) %Loads all .set files and changes the channel lo
     EEG = pop_loadset( 'filename', fileName, 'filepath', EEG_directory_name);
     EEG = eeg_checkset( EEG );
 
-    old_EEG = EEG
+    old_EEG = EEG;
     
     EEG = pop_chanedit(EEG, 'load',{convertStringsToChars(pwd+chanloc) 'filetype' 'autodetect'}); %%.sfp file must be in the working directory (same folder as .raw files)
     EEG.setname=[NAME, '_Loc'];

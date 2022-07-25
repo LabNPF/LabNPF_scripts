@@ -1,6 +1,6 @@
 %% 00 - Global variables
 
-bin_def = "/A_BinDescriptorFile_AvCond.txt" %Name of the bin descriptor file. Default: "/A_BinDescriptorFile_AvCond.txt"
+bin_def = "/A_BinDescriptorFile_AvCond.txt"; %Name of the bin descriptor file. Default: "/A_BinDescriptorFile_AvCond.txt"
 epoch_startend = [-200.0  800.0]; %Start and end of the epochs. Default:[-200.0 800.0]
 %Sections 06 and 07 have bin and channel operators, respectively, that are study dependent so there's no default.
 fid = fopen('log.txt','a+'); %Creates or opens the log file
@@ -315,6 +315,10 @@ eeglab redraw;
 avgchan_files = dir(fullfile(ERP_directory_name, '*_AvgChan.erp'));
 
 avgchan_fileIndex = find(~[avgchan_files.isdir]);
+
+size_ERPbin = size(ERP.bindata);
+
+NTRIALS = zeros(length(avgchan_fileIndex),size_ERPbin(3));
 
 for i = 1:length(avgchan_fileIndex)
     fileName = avgchan_files(avgchan_fileIndex(i)).name;
