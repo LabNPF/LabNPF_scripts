@@ -38,7 +38,7 @@ for i = 1:length(raw_fileIndex) %Loads every file in the index and saves as .set
     EEGOUT = pop_saveset(EEG,  [NAME, '.set'], [directory_name '/EEG_Set']);
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Exported EGI to .set; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Exported EGI to .set; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -81,7 +81,7 @@ for i = 1:length(set_fileIndex) %Removes channel 130 from all files
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Removed channel 130; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Removed channel 130; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -119,7 +119,7 @@ for i = 1:length(set_fileIndex) %Loads all .set files and changes the channel lo
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Changed channel locations; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Changed channel locations; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -152,14 +152,14 @@ for i = 1:length(loc_fileIndex) %Filters signal with a low-pass 30 Hz followed b
     EEG.setname=[NAME, '_lp'];
     EEG = eeg_checkset( EEG );
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Applied low-pass filter, %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Applied low-pass filter, %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
 
     EEG = pop_eegfilt( EEG, high_pass, 0, [], [0], 0, 0, 'fir1', 0); %High-pass 0.1 Hz filter
     EEG.setname=[NAME, '_lp_hp'];
     EEG = eeg_checkset( EEG );
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Applied high-pass filter; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Applied high-pass filter; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
     if isequaln(old_EEG,EEG)
@@ -221,7 +221,7 @@ for i = 1:length(hp_fileIndex) %For every file removes manually selected channel
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Deleted manually selected channels; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Deleted manually selected channels; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -261,7 +261,7 @@ for i = 1:length(del_fileIndex) %Performs ICA in all files
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Computed ICA; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Computed ICA; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -309,7 +309,7 @@ for i = 2:length(cl_fileIndex) %Interpolates deleted channels
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Interpolated deleted channels; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Interpolated deleted channels; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -353,7 +353,7 @@ for i = 1:length(interp_fileIndex) %Re-references
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Re-referenced; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Re-referenced; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end

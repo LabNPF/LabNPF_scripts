@@ -29,7 +29,7 @@ for i = 1:length(ref_fileIndex) %Creates and saves the event list
     [PATH, NAME, EXT] = fileparts(fileName);
 
     EEG = pop_loadset( 'filename', fileName, 'filepath', EEG_directory_name);
-    EEG = eeg_checkset( EEG );
+    EEG = eeg_checkset( EEG );  
     
     old_EEG = EEG;
 
@@ -48,7 +48,7 @@ for i = 1:length(ref_fileIndex) %Creates and saves the event list
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Created event list; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Created event list; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -91,7 +91,7 @@ for i = 1:length(elist_fileIndex) %Assigns Bins
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Assigned bins; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Assigned bins; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -133,7 +133,7 @@ for i = 1:length(bin_fileIndex) %Extracts epochs
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Extracted bin based epochs; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Extracted bin based epochs; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -174,7 +174,7 @@ for i = 1:length(epoched_fileIndex) %Updates the event list with the marked epoc
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Updated event list with marked epochs; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Updated event list with marked epochs; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -210,7 +210,7 @@ for i = 1:length(artef_fileIndex) %Creates ERP set
     eeglab redraw;
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Created ERP set; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Created ERP set; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -253,7 +253,7 @@ for i = 1:length(erp_fileIndex)
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; New bins; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; New bins; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -297,7 +297,7 @@ for i = 1:length(newbin_fileIndex)
     end
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; New channels; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; New channels; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
@@ -331,7 +331,7 @@ for i = 1:length(avgchan_fileIndex)
     eeglab redraw;
     
     fid = fopen('log.txt','a+');
-    fprintf(fid, 'Subject: %d ; Extracted epoch number; %s\n',i,datestr(now,'HH:MM:SS.FFF'));
+    fprintf(fid, 'Subject: %d ; Extracted epoch number; %s\n',i,datestr(now,'HH:MM:SS.FFF dd/mm/yy'));
     fclose(fid);
     
 end
