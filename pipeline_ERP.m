@@ -1,3 +1,27 @@
+%% [Developer notes]
+%
+% LabNPF_scripts pipeline_ERP version [pending]
+%   - Consolidated MATLAB/EEGLAB scripts for EEG/ERP signal processing
+%   - Contributors (alphabetically): Pedro L. Chaves, Fernando Ferreira-Santos, José Diogo Marques dos Santos, Tiago O. Paiva
+%   - Curation: Fernando Ferreira-Santos
+%   - Laboratory of Neuropsychophysiology (FPCEUP) - https://www.fpce.up.pt/labpsi
+% 
+% To-do:
+%   - Add header with full institutional and authorship/contributors information (pending final revision)
+%   - Include minimal instructions of use in header, plus link to full instruction on GitHub repo (to be prepared)
+%   - Add full documentation to each step of the script
+%   - Prepare as function that returns link to instructions if called from MATLAB (explaining it is to be used as a template, rather than a function)
+%   - Once script is finalized, replace [Developer notes] section with common EEGLAB-style header
+%
+% Changelog:
+%   2022-11-17: Added comments "%REVISE" in positions requiring revision (FFS)
+%               Added initial section with "[Developer notes]" to track progress and highlight to-do action points (FFS)
+%   2022-07: initial version of the consolidated script for ERP analysis (JDMS)
+%
+%
+
+
+
 %% 00 - Global variables
 
 bin_def = "/A_BinDescriptorFile_AvCond.txt"; %Name of the bin descriptor file. Default: "/A_BinDescriptorFile_AvCond.txt"
@@ -98,6 +122,7 @@ end
 
 disp('*** Bins successfully assigned! ***');
 
+
 %% 03 - Extract Bin based epochs
 
 if exist('bin_def','var') == 0
@@ -140,6 +165,7 @@ end
 
 disp('*** Bin based epochs successfully extracted! ***');
 
+
 %% 04 - Update event list with marked epochs
 
 if exist('bin_def','var') == 0
@@ -181,6 +207,7 @@ end
 
 disp('*** Event list successfully updated! ***');
 
+
 %% 05 - Create ERP set
 
 if exist('bin_def','var') == 0
@@ -217,7 +244,8 @@ end
 
 disp('*** ERP set successfully created! ***');
 
-%% 06 - New Bins ERP set
+
+%% 06 - New Bins ERP set  %REVISE: this step is defined for a specific study, with the specific conditions from that study
 
 if exist('bin_def','var') == 0
     error('Global variables undefined');
@@ -260,7 +288,8 @@ end
 
 disp('*** All files successfully processed! ***');
 
-%% 07 - New channels ERP set
+
+%% 07 - New channels ERP set  %REVISE: this step is defined for a specific study, with the specific channel clusters from that study
 
 if exist('bin_def','var') == 0
     error('Global variables undefined');
@@ -303,6 +332,7 @@ for i = 1:length(newbin_fileIndex)
 end
 
 disp('*** All files successfully processed! ***');
+
 
 %% 08 - Extract epoch number
 
