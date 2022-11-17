@@ -1,4 +1,28 @@
-%% 00 - Global variables
+%% [Developer notes]
+%
+% LabNPF_scripts version [pending]
+%   - Consolidated MATLAB/EEGLAB scripts for EEG/ERP signal processing
+%   - Contributors (alphabetically): Pedro L. Chaves, Fernando Ferreira-Santos, José Diogo Marques dos Santos, Tiago O. Paiva
+%   - Curation: Fernando Ferreira-Santos
+%   - Laboratory of Neuropsychophysiology (FPCEUP) - https://www.fpce.up.pt/labpsi
+% 
+% To-do:
+%   - Add header with full institutional and authorship/contributors information (pending final revision)
+%   - Include minimal instructions of use in header, plus link to full instruction on GitHub repo (to be prepared)
+%   - Add full documentation to each step of the script
+%   - Prepare as function that returns link to instructions if called from MATLAB (explaining it is to be used as a template, rather than a function)
+%   - Once script is finalized, replace [Developer notes] section with common EEGLAB-style header
+%
+% Changelog:
+%   2022-11-17: Added comments "%REVISE" in positions requiring revision (FFS)
+%               Converted all manual steps into independent sections, which include in indication "[Manual step]" (FFS)
+%               Added initial section with "[Developer notes]" to track progress and highlight to-do action points (FFS)
+%   2022-07: initial version of the consolidated script (JDMS)
+%
+%
+
+
+%% 00 - Define global variables [Manual step]
 
 channel_interp = '00_CL.set'; %name of the .set file for the electrode location for channel interpolation. Default: 00_CL.set
 excel_filename = 'key.xlsx'; %Excel file with the trim intervals and channels removed. Default: key.xlsx
@@ -17,7 +41,7 @@ raw_files = dir(fullfile(raw_directory_name, '*.raw'));
 mkdir(directory_name, '/EEG_Set'); %Create new directory to save .set files
 EEG_directory_name = strcat(directory_name,'/EEG_Set');
 
-%% 01 - Autoexport egi to .set
+%% 01 - Autoexport egi .raw files to .set files
 
 if exist('channel_interp','var') == 0
     error('Global variables undefined');
@@ -171,10 +195,14 @@ end
 
 disp('*** All files successfully filtered! ***');
 
-disp('Manual step: determine trim intervals and channels to be deleted.');
+%% 05 - Visual inspection of signals to identify bad channels [Manual step]
+
+disp('Manual step: determine trim intervals and channels to be deleted.'); %REVISE: trimming data may affect ICA - this must be discussed!
+%REVISE: add instructions to edit excel file?
 input('Press "Enter" to continue...','s');
 
-%% 05 - Delete bad channels
+
+%% 06 - Delete bad channels
 
 if exist('channel_interp','var') == 0
     error('Global variables undefined');
@@ -228,7 +256,7 @@ end
 
 disp('*** Bad channels sucessfully deleted! ***');
 
-%% 06 - Batch ICA
+%% 07 - Batch ICA
 
 if exist('channel_interp','var') == 0
     error('Global variables undefined');
@@ -267,10 +295,14 @@ for i = 1:length(del_fileIndex) %Performs ICA in all files
 end
 
 disp('*** ICA was sucessfully computed! ***');
+
+%% 08 - Manual identification of artifactual ICs and data correction [Manual step]
+
 disp('Manual step: delete bad channels based on the ICA. Output file must be named *_CL.set, where * is the current name of the file');
+%REVISE - this should be signal correction by subtracting artifactual ICs from the data, not removing channels.
 input('Press "Enter" to continue...','s');
 
-%% 07 - Bad channel interpolation
+%% 09 - Bad channel interpolation
 
 if exist('channel_interp','var') == 0
     error('Global variables undefined');
@@ -318,7 +350,7 @@ eeglab redraw;
      
 disp('*** Bad channels were sucessfully interpolated! ***');
 
-%% 08 - Re-reference
+%% 10 - Re-reference
 
 if exist('channel_interp','var') == 0
     error('Global variables undefined');
