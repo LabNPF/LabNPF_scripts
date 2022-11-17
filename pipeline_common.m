@@ -1,6 +1,6 @@
 %% [Developer notes]
 %
-% LabNPF_scripts version [pending]
+% LabNPF_scripts pipeline_common version [pending]
 %   - Consolidated MATLAB/EEGLAB scripts for EEG/ERP signal processing
 %   - Contributors (alphabetically): Pedro L. Chaves, Fernando Ferreira-Santos, José Diogo Marques dos Santos, Tiago O. Paiva
 %   - Curation: Fernando Ferreira-Santos
