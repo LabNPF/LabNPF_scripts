@@ -10,7 +10,6 @@
 %   - Add header with full institutional and authorship/contributors information (pending final revision)
 %   - Include minimal instructions of use in header, plus link to full instruction on GitHub repo (to be prepared)
 %   - Add full documentation to each step of the script
-%   - Prepare as function that returns link to instructions if called from MATLAB (explaining it is to be used as a template, rather than a function)
 %   - Once script is finalized, replace [Developer notes] section with common EEGLAB-style header
 %
 % Changelog:
