@@ -9,7 +9,7 @@ The use of scripts to automate data processing tasks should always be done in a 
 Guidelines:
   1. When analysing any data, always ensure that you have a safe backup of the same data in another location. That way, if anything goes wrong and the data gets deleted ou modified during your analysis/processing, you can always recover the original data.
   2. Ensure that you know what a script does and how it should be used (read the documentation).
-  3. Ensure that if you run scripts in a sequence, the sequence follows logical steps.
+  3. Ensure that if you run scripts/script sections in a sequence, the sequence follows logical steps.
   4. Any data analysis or processing should be carefully documented in a log file so that every step of the procedure can be reproduced.
 
 
