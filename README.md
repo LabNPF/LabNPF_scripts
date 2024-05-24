@@ -14,11 +14,11 @@ Guidelines:
 
 
 ## EEG Pre-processing scripts for automating EEGLAB tasks
-*(in preparation)*
+*(in preparation)* https://github.com/LabNPF/LabNPF_scripts/blob/main/pipeline_EEGLAB.m
 
 
 ## ERP analysis scripts for automating ERPLAB tasks
-*(in preparation)*
+*(in preparation)* https://github.com/LabNPF/LabNPF_scripts/blob/main/pipeline_ERPLAB.m
 
 
 ## Disclaimer
