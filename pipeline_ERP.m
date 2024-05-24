@@ -9,11 +9,11 @@
 % To-do:
 %   - Add header with full institutional and authorship/contributors information (pending final revision)
 %   - Include minimal instructions of use in header, plus link to full instruction on GitHub repo (to be prepared)
-%   - Add full documentation to each step of the script
-%   - Prepare as function that returns link to instructions if called from MATLAB (explaining it is to be used as a template, rather than a function)
+%        - NOTE: these instructions should clarify that the script is based on Tiago's design, and must be adapted for other uses.
 %   - Once script is finalized, replace [Developer notes] section with common EEGLAB-style header
 %
 % Changelog:
+%   2024-05-24: Revised plan to make this a general-use script; now will be presented as a specific example that can be adapted (FFS) 
 %   2022-11-17: Added comments "%REVISE" in positions requiring revision (FFS)
 %               Added initial section with "[Developer notes]" to track progress and highlight to-do action points (FFS)
 %   2022-07: initial version of the consolidated script for ERP analysis (JDMS)
