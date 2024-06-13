@@ -4,7 +4,7 @@ LabNPF_scripts is the official repository of the [Laboratory of Neuropsychophysi
 
 Custom in-house scripts have circulated in the Laboratory since the dawn of time, but these lack consistent documentation and version-control. The purpose of this repository is to provide curated, version-controlled scripts.
 
-The use of scripts to automate data processing tasks should always be done in a responsible manner, as scripts should not replace the researcher's decisions and judgment about data processing steps. 
+The use of scripts to automate data processing tasks should always be done in a responsible manner, as scripts should not replace the researcher's decisions and judgment about data processing steps (see "Disclaimer" below). 
 
 Guidelines:
   1. When analysing any data, always ensure that you have a safe backup of the same data in another location. That way, if anything goes wrong and the data gets deleted ou modified during your analysis/processing, you can always recover the original data.
